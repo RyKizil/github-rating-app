@@ -1,7 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import theme from "../theme";
 import Tag from "./Tag";
+import CardFooter from "./CardFooter";
+
+const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   cardHeader: {
@@ -33,14 +36,22 @@ const RepositoryItem = ({ item }) => (
       </View>
       <View>
         <Text style={styles.cardHeaderText}>{item.fullName}</Text>
-        <Text>{item.description}</Text>
+        <View
+          style={{
+            width: (windowWidth / 5) * 3.75,
+          }}
+        >
+          <Text>{item.description}</Text>
+        </View>
         <Tag title={item.language} />
       </View>
     </View>
-    <Text>Stars: {item.stargazersCount}</Text>
-    <Text>Forks: {item.forksCount}</Text>
-    <Text>Reviews: {item.reviewCount}</Text>
-    <Text>Rating: {item.ratingAverage}</Text>
+    <CardFooter
+      starCount={item.stargazersCount}
+      forkCount={item.forksCount}
+      reviewCount={item.reviewCount}
+      ratingAverage={item.ratingAverage}
+    />
   </View>
 );
 
