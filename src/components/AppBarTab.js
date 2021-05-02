@@ -1,19 +1,36 @@
 import React from "react";
-import { StyleSheet, Pressable, Text } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { Link } from "react-router-native";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
   text: {
     color: theme.colors.white,
     fontWeight: theme.fontWeights.bold,
+    paddingRight: 10,
+  },
+  container: {
+    /*flexDirection: "row",
+    justifyContent: "space-between",*/
   },
 });
 
-const AppBarTab = ({ title }) => {
+const AppBarTab = () => {
   return (
-    <Pressable>
-      <Text style={styles.text}>{title}</Text>
-    </Pressable>
+    <View style={styles.container}>
+      <ScrollView horizontal>
+        <View>
+          <Link to="/">
+            <Text style={styles.text}>Repositories</Text>
+          </Link>
+        </View>
+        <View>
+          <Link to="/signin">
+            <Text style={styles.text}>Sign in</Text>
+          </Link>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
