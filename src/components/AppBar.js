@@ -10,13 +10,15 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.backgroundDark,
     paddingBottom: 15,
     paddingLeft: 10,
+    //flexDirection: "row",
+    //flex: 1,
   },
 });
 
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab title="Repositories" />
+      <AppBarTab />
     </View>
   );
 };
