@@ -7,6 +7,7 @@ const theme = {
     white: "#fff",
     black: "#000",
     main: "#e1e4e8",
+    error: "#d73a4a",
   },
   fontSizes: {
     body: 14,
@@ -14,6 +15,8 @@ const theme = {
   },
   fonts: {
     main: "System",
+    ios: "Arial",
+    android: "Roboto",
   },
   fontWeights: {
     normal: "400",
