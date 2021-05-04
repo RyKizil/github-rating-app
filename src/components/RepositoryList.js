@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { FlatList, View, StyleSheet } from "react-native";
+import { useQuery } from "@apollo/client";
+import { GET_REPOSITORIES } from "../graphql/queries";
 import RepositoryItem from "./RepositoryItem";
-import useRepositories from "../hooks/useRepositories";
+//npimport useRepositories from "../hooks/useRepositories";
 
 const styles = StyleSheet.create({
   separator: {
@@ -12,10 +14,14 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  //const { repositories } = useRepositories(); // this is for Rest api call
 
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
+  const { loading, data } = useQuery(GET_REPOSITORIES, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  const repositoryNodes = !loading
+    ? data.repositories.edges.map((edge) => edge.node)
     : [];
 
   return (
