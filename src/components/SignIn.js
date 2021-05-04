@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER } from "../graphql/mutations";
+import { useSignIn } from "../hooks/useSignIn";
 import theme from "../theme";
 
 const windowsWidth = Dimensions.get("window").width;
@@ -37,6 +40,8 @@ const styles = StyleSheet.create({
 });
 
 const SignIn = () => {
+  //const [signIn] = useSignIn();
+  const [createUser, { data }] = useMutation(CREATE_USER);
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -57,8 +62,16 @@ const SignIn = () => {
       password: "",
     },
     validate,
-    onSubmit: (values) => {
-      console.log(JSON.stringify(values));
+    onSubmit: async (values) => {
+      const { username, password } = values;
+      try {
+        const { data } = await createUser({
+          user: { username, password },
+        });
+        console.log(data);
+      } catch (e) {
+        console.log(e);
+      }
     },
   });
   return (
