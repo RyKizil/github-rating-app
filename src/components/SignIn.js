@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -10,8 +10,11 @@ import {
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 import { useMutation } from "@apollo/client";
-import { CREATE_USER } from "../graphql/mutations";
+import { useHistory } from "react-router-native";
+import { useApolloClient } from "@apollo/client";
+import { CREATE_USER, AUTHORIZE_USER } from "../graphql/mutations";
 import { useSignIn } from "../hooks/useSignIn";
+import useAuthStorage from "../hooks/useAuthStorage";
 import theme from "../theme";
 
 const windowsWidth = Dimensions.get("window").width;
@@ -41,7 +44,11 @@ const styles = StyleSheet.create({
 
 const SignIn = () => {
   //const [signIn] = useSignIn();
-  const [createUser, { data }] = useMutation(CREATE_USER);
+  const apolloClient = useApolloClient();
+  let history = useHistory();
+  const authStorage = useAuthStorage();
+  const [createUser] = useMutation(CREATE_USER);
+  const [authorize] = useMutation(AUTHORIZE_USER);
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -66,12 +73,19 @@ const SignIn = () => {
       const { username, password } = values;
       try {
         const { data } = await createUser({
-          user: { username, password },
+          variables: { username: username, password: password },
         });
+
         console.log(data);
       } catch (e) {
         console.log(e);
       }
+      const { data } = await authorize({
+        variables: { username: username, password: password },
+      });
+      history.push("/repositories");
+      await authStorage.setAccessToken(data.authorize.accessToken);
+      apolloClient.resetStore();
     },
   });
   return (
@@ -95,24 +109,24 @@ const SignIn = () => {
             <TextInput
               style={styles.input}
               onChangeText={formik.handleChange("username")}
-              onBlur={handleBlur("username")}
+              onBlur={formik.handleBlur("username")}
               value={formik.values.username}
               placeholder="username"
             />
-            {formik.errors.username && (
+            {formik.touched.username && formik.errors.username ? (
               <Text style={styles.errorText}>{formik.errors.username}</Text>
-            )}
+            ) : null}
             <TextInput
               style={styles.input}
               onChangeText={formik.handleChange("password")}
-              onBlur={handleBlur("password")}
+              onBlur={formik.handleBlur("password")}
               value={formik.values.password}
               secureTextEntry={true}
               placeholder="password"
             />
-            {formik.errors.password && (
+            {formik.touched.password && formik.errors.password ? (
               <Text style={styles.errorText}>{formik.errors.password}</Text>
-            )}
+            ) : null}
             <Button title="Sign in" onPress={formik.handleSubmit} />
           </View>
         )}
