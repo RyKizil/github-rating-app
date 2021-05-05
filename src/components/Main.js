@@ -19,10 +19,10 @@ const Main = () => {
     <View style={styles.container}>
       <AppBar />
       <Switch>
-        <Route path="/" exact>
+        <Route path="/repositories" exact>
           <RepositoryList />
         </Route>
-        <Route path="/signin" exact>
+        <Route path="/" exact>
           <SignIn />
         </Route>
         <Redirect to="/" />
