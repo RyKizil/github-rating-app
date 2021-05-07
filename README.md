@@ -1,3 +1,3 @@
 # github-rating-app
 
-Small side project for rating github repositories done with expo.
+Small React-Natives project for rating github repositories done with expo.
