@@ -3,7 +3,6 @@ import { FlatList, View, StyleSheet } from "react-native";
 import { useQuery } from "@apollo/client";
 import { GET_REPOSITORIES } from "../graphql/queries";
 import RepositoryItem from "./RepositoryItem";
-//npimport useRepositories from "../hooks/useRepositories";
 
 const styles = StyleSheet.create({
   separator: {
