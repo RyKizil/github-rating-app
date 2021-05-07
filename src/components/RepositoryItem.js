@@ -1,5 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Pressable,
+} from "react-native";
+import { useHistory } from "react-router-native";
+import { useQuery } from "@apollo/client";
+import { GET_REPOSITORY } from "../graphql/queries";
 import theme from "../theme";
 import Tag from "./Tag";
 import CardFooter from "./CardFooter";
@@ -28,33 +38,42 @@ const styles = StyleSheet.create({
   },
 });
 
-const RepositoryItem = ({ item }) => (
-  <View style={styles.container}>
-    <View style={styles.cardHeader}>
-      <View>
-        <Image style={styles.logo} source={{ uri: item.ownerAvatarUrl }} />
-      </View>
-      <View>
-        <Text testID="textFullName" style={styles.cardHeaderText}>
-          {item.fullName}
-        </Text>
-        <View
-          style={{
-            width: (windowWidth / 5) * 3.75,
-          }}
-        >
-          <Text>{item.description}</Text>
+const RepositoryItem = ({ item }) => {
+  let history = useHistory();
+
+  const handlePress = () => {
+    history.push(`/repositories/${item.id}`);
+  };
+  return (
+    <View style={styles.container}>
+      <Pressable onPress={handlePress}>
+        <View style={styles.cardHeader}>
+          <View>
+            <Image style={styles.logo} source={{ uri: item.ownerAvatarUrl }} />
+          </View>
+          <View>
+            <Text testID="textFullName" style={styles.cardHeaderText}>
+              {item.fullName}
+            </Text>
+            <View
+              style={{
+                width: (windowWidth / 5) * 3.75,
+              }}
+            >
+              <Text>{item.description}</Text>
+            </View>
+            <Tag title={item.language} />
+          </View>
         </View>
-        <Tag title={item.language} />
-      </View>
+        <CardFooter
+          starCount={item.stargazersCount}
+          forkCount={item.forksCount}
+          reviewCount={item.reviewCount}
+          ratingAverage={item.ratingAverage}
+        />
+      </Pressable>
     </View>
-    <CardFooter
-      starCount={item.stargazersCount}
-      forkCount={item.forksCount}
-      reviewCount={item.reviewCount}
-      ratingAverage={item.ratingAverage}
-    />
-  </View>
-);
+  );
+};
 
 export default RepositoryItem;
