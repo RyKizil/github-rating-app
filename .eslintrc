@@ -1,5 +1,10 @@
 {
   "plugins": ["react"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jest/recommended"
+  ],
   "settings": {
     "react": {
       "version": "detect"

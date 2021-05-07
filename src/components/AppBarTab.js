@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Link } from "react-router-native";
+import LoginContext from "../contexts/LoginContext";
 import theme from "../theme";
 
 const styles = StyleSheet.create({
@@ -9,15 +10,12 @@ const styles = StyleSheet.create({
     fontWeight: theme.fontWeights.bold,
     paddingRight: 10,
   },
-  container: {
-    /*flexDirection: "row",
-    justifyContent: "space-between",*/
-  },
 });
 
 const AppBarTab = () => {
+  const { isLoggedIn } = useContext(LoginContext);
   return (
-    <View style={styles.container}>
+    <View>
       <ScrollView horizontal>
         <View>
           <Link to="/repositories">
@@ -26,7 +24,9 @@ const AppBarTab = () => {
         </View>
         <View>
           <Link to="/">
-            <Text style={styles.text}>Sign in</Text>
+            <Text style={styles.text}>
+              {isLoggedIn ? "Sign out" : "Sign in"}
+            </Text>
           </Link>
         </View>
       </ScrollView>

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Route, Switch, Redirect } from "react-router-native";
+import LoginContext from "../contexts/LoginContext";
 import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
 import theme from "../theme";
@@ -15,18 +16,34 @@ const styles = StyleSheet.create({
 });
 
 const Main = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const login = () => {
+    setLoggedIn(true);
+  };
+  const logout = () => {
+    setLoggedIn(false);
+  };
   return (
     <View style={styles.container}>
-      <AppBar />
-      <Switch>
-        <Route path="/repositories" exact>
-          <RepositoryList />
-        </Route>
-        <Route path="/" exact>
-          <SignIn />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+      <LoginContext.Provider
+        value={{
+          isLoggedIn: loggedIn,
+          token: null,
+          login,
+          logout,
+        }}
+      >
+        <AppBar />
+        <Switch>
+          <Route path="/repositories" exact>
+            <RepositoryList />
+          </Route>
+          <Route path="/" exact>
+            <SignIn />
+          </Route>
+          <Redirect to="/" />
+        </Switch>
+      </LoginContext.Provider>
     </View>
   );
 };

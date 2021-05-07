@@ -35,7 +35,9 @@ const RepositoryItem = ({ item }) => (
         <Image style={styles.logo} source={{ uri: item.ownerAvatarUrl }} />
       </View>
       <View>
-        <Text style={styles.cardHeaderText}>{item.fullName}</Text>
+        <Text testID="textFullName" style={styles.cardHeaderText}>
+          {item.fullName}
+        </Text>
         <View
           style={{
             width: (windowWidth / 5) * 3.75,

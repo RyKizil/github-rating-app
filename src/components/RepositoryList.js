@@ -13,6 +13,16 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
+export const RepositoryListContainer = ({ repositories }) => {
+  return (
+    <FlatList
+      data={repositories}
+      renderItem={({ item }) => <RepositoryItem testID="repo" item={item} />}
+      ItemSeparatorComponent={ItemSeparator}
+    />
+  );
+};
+
 const RepositoryList = () => {
   //const { repositories } = useRepositories(); // this is for Rest api call
 
@@ -24,13 +34,7 @@ const RepositoryList = () => {
     ? data.repositories.edges.map((edge) => edge.node)
     : [];
 
-  return (
-    <FlatList
-      data={repositoryNodes}
-      renderItem={({ item }) => <RepositoryItem item={item} />}
-      ItemSeparatorComponent={ItemSeparator}
-    />
-  );
+  return <RepositoryListContainer repositories={repositoryNodes} />;
 };
 
 export default RepositoryList;

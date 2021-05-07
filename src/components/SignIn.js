@@ -16,6 +16,7 @@ import { CREATE_USER, AUTHORIZE_USER } from "../graphql/mutations";
 import { useSignIn } from "../hooks/useSignIn";
 import useAuthStorage from "../hooks/useAuthStorage";
 import theme from "../theme";
+import LoginContext from "../contexts/LoginContext";
 
 const windowsWidth = Dimensions.get("window").width;
 
@@ -44,11 +45,16 @@ const styles = StyleSheet.create({
 
 const SignIn = () => {
   //const [signIn] = useSignIn();
+  const { login, logout, isLoggedIn } = useContext(LoginContext);
   const apolloClient = useApolloClient();
   let history = useHistory();
   const authStorage = useAuthStorage();
   const [createUser] = useMutation(CREATE_USER);
   const [authorize] = useMutation(AUTHORIZE_USER);
+
+  const handleLogout = () => {
+    logout();
+  };
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -75,6 +81,7 @@ const SignIn = () => {
         const { data } = await createUser({
           variables: { username: username, password: password },
         });
+        login();
 
         console.log(data);
       } catch (e) {
@@ -90,47 +97,60 @@ const SignIn = () => {
   });
   return (
     <View style={styles.container}>
-      <Formik
-        initialValues={{ username: "", password: "" }}
-        onSubmit={(values) => console.log("values: ", values)}
-        validationSchema={validationSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          /* and other goodies */
-        }) => (
-          <View style={styles.innerContainer}>
-            <TextInput
-              style={styles.input}
-              onChangeText={formik.handleChange("username")}
-              onBlur={formik.handleBlur("username")}
-              value={formik.values.username}
-              placeholder="username"
-            />
-            {formik.touched.username && formik.errors.username ? (
-              <Text style={styles.errorText}>{formik.errors.username}</Text>
-            ) : null}
-            <TextInput
-              style={styles.input}
-              onChangeText={formik.handleChange("password")}
-              onBlur={formik.handleBlur("password")}
-              value={formik.values.password}
-              secureTextEntry={true}
-              placeholder="password"
-            />
-            {formik.touched.password && formik.errors.password ? (
-              <Text style={styles.errorText}>{formik.errors.password}</Text>
-            ) : null}
-            <Button title="Sign in" onPress={formik.handleSubmit} />
-          </View>
-        )}
-      </Formik>
+      {!isLoggedIn ? (
+        <Formik
+          initialValues={{ username: "", password: "" }}
+          onSubmit={(values) => console.log("values: ", values)}
+          validationSchema={validationSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <View style={styles.innerContainer}>
+              <TextInput
+                style={styles.input}
+                onChangeText={formik.handleChange("username")}
+                onBlur={formik.handleBlur("username")}
+                value={formik.values.username}
+                placeholder="username"
+              />
+              {formik.touched.username && formik.errors.username ? (
+                <Text style={styles.errorText}>{formik.errors.username}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                onChangeText={formik.handleChange("password")}
+                onBlur={formik.handleBlur("password")}
+                value={formik.values.password}
+                secureTextEntry={true}
+                placeholder="password"
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <Text style={styles.errorText}>{formik.errors.password}</Text>
+              ) : null}
+              <Button title="Sign in" onPress={formik.handleSubmit} />
+            </View>
+          )}
+        </Formik>
+      ) : (
+        <View
+          style={{
+            marginTop: 250,
+          }}
+        >
+          <Text style={{ fontSize: 20, marginBottom: 20 }}>
+            You sure you want to logout?
+          </Text>
+          <Button title="logout" onPress={handleLogout} />
+        </View>
+      )}
     </View>
   );
 };
