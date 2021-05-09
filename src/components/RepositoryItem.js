@@ -8,7 +8,6 @@ import {
   Pressable,
 } from "react-native";
 import { useHistory } from "react-router-native";
-import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
 import theme from "../theme";
 import Tag from "./Tag";
