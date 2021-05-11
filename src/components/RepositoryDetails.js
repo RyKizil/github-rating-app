@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  Dimensions,
+  View,
+  Image,
+  Button,
+} from "react-native";
 import { useParams } from "react-router-native";
 import theme from "../theme";
 import { useQuery } from "@apollo/client";
@@ -28,6 +35,10 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: theme.colors.white,
+  },
+  btn: {
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
 });
 
@@ -77,6 +88,9 @@ const RepositoryDetails = () => {
         reviewCount={repository.reviewCount}
         ratingAverage={repository.ratingAverage}
       />
+      <View style={styles.btn}>
+        <Button color="#0065D4" title="Open in GitHub" />
+      </View>
     </View>
   );
 };
