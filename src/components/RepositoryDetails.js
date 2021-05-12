@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-native";
 import { useParams } from "react-router-native";
+import * as Linking from "expo-linking";
 import theme from "../theme";
 import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
@@ -59,6 +60,10 @@ const RepositoryDetails = () => {
     );
   }
 
+  const handlePress = () => {
+    Linking.openURL(repository.url);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.cardHeader}>
@@ -89,7 +94,7 @@ const RepositoryDetails = () => {
         ratingAverage={repository.ratingAverage}
       />
       <View style={styles.btn}>
-        <Button color="#0065D4" title="Open in GitHub" />
+        <Button color="#0065D4" title="Open in GitHub" onPress={handlePress} />
       </View>
     </View>
   );
