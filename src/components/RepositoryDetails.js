@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   View,
   Image,
   Button,
+  FlatList,
 } from "react-native";
 import { useParams } from "react-router-native";
 import * as Linking from "expo-linking";
@@ -43,16 +44,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const RepositoryDetails = () => {
-  const { id } = useParams();
-  const { loading, data } = useQuery(GET_REPOSITORY, {
-    variables: { id: id },
-    fetchPolicy: "cache-and-network",
-  });
-
-  const repository = !loading ? data.repository : [];
-
-  if (!data) {
+const RepositoryDetail = ({ repository }) => {
+  if (!repository) {
     return (
       <View>
         <Text>Loading...</Text>
@@ -65,7 +58,7 @@ const RepositoryDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginBottom: 7 }]}>
       <View style={styles.cardHeader}>
         <View>
           <Image
@@ -97,6 +90,42 @@ const RepositoryDetails = () => {
         <Button color="#0065D4" title="Open in GitHub" onPress={handlePress} />
       </View>
     </View>
+  );
+};
+
+const ReviewItem = ({ review }) => {
+  return (
+    <View style={[styles.container, { marginBottom: 7 }]}>
+      <Text>{review.node.rating}</Text>
+      <Text>{review.node.user.username}</Text>
+      <Text>{review.node.createdAt}</Text>
+
+      <Text>{review.node.text}</Text>
+    </View>
+  );
+};
+
+const RepositoryDetails = () => {
+  const [reviews, setReviews] = useState([]);
+  const { id } = useParams();
+  const { loading, data } = useQuery(GET_REPOSITORY, {
+    variables: { id: id },
+    fetchPolicy: "cache-and-network",
+  });
+
+  const repository = !loading ? data.repository : [];
+  useEffect(() => {
+    if (!loading) {
+      setReviews(repository.reviews.edges);
+    }
+  }, []);
+  return (
+    <FlatList
+      data={reviews}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ListHeaderComponent={() => <RepositoryDetail repository={repository} />}
+    />
   );
 };
 
