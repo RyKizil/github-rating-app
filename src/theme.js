@@ -8,6 +8,7 @@ const theme = {
     black: "#000",
     main: "#e1e4e8",
     error: "#d73a4a",
+    lightBlue: "#2569A7",
   },
   fontSizes: {
     body: 14,

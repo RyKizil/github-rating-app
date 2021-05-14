@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignIn = () => {
+const CreateReview = () => {
   //const [signIn] = useSignIn();
   const { login, logout, isLoggedIn } = useContext(LoginContext);
   const apolloClient = useApolloClient();
@@ -56,27 +56,32 @@ const SignIn = () => {
   };
   const validate = (values) => {
     const errors = {};
-    if (!values.username) {
-      errors.username = "Required";
-    } else if (values.username.length > 20) {
+    if (!values.owner) {
+      errors.owner = "Repository owner name is required";
+    } else if (values.owner.length > 20) {
       errors.username = "Must be 20 characters or less";
     }
 
     if (!values.password) {
       errors.password = "Required";
     }
+    if (!values.name) {
+      errrors.name = "Name is required";
+    }
 
     return errors;
   };
   const formik = useFormik({
     initialValues: {
-      username: "",
-      password: "",
+      owner: "",
+      name: "",
+      rating: "",
+      review: "",
     },
     validate,
     onSubmit: async (values) => {
-      const { username, password } = values;
-      try {
+      const { owner, name, rating, review } = values;
+      /*try {
         const { data } = await createUser({
           variables: { username: username, password: password },
         });
@@ -92,13 +97,14 @@ const SignIn = () => {
       history.push("/repositories");
       await authStorage.setAccessToken(data.authorize.accessToken);
       apolloClient.resetStore();
+      */
     },
   });
   return (
     <View style={styles.container}>
       {!isLoggedIn ? (
         <Formik
-          initialValues={{ username: "", password: "" }}
+          initialValues={{ owner: "", name: "", rating: "", review: "" }}
           onSubmit={(values) => console.log("values: ", values)}
           validationSchema={validationSchema}
         >
@@ -115,24 +121,43 @@ const SignIn = () => {
             <View style={styles.innerContainer}>
               <TextInput
                 style={styles.input}
-                onChangeText={formik.handleChange("username")}
-                onBlur={formik.handleBlur("username")}
-                value={formik.values.username}
-                placeholder="username"
+                onChangeText={formik.handleChange("owner")}
+                onBlur={formik.handleBlur("owner")}
+                value={formik.values.owner}
+                placeholder="Repository owner name"
               />
-              {formik.touched.username && formik.errors.username ? (
-                <Text style={styles.errorText}>{formik.errors.username}</Text>
+              {formik.touched.owner && formik.errors.owner ? (
+                <Text style={styles.errorText}>{formik.errors.owner}</Text>
               ) : null}
               <TextInput
                 style={styles.input}
-                onChangeText={formik.handleChange("password")}
-                onBlur={formik.handleBlur("password")}
-                value={formik.values.password}
-                secureTextEntry={true}
-                placeholder="password"
+                onChangeText={formik.handleChange("name")}
+                onBlur={formik.handleBlur("name")}
+                value={formik.values.name}
+                placeholder="Repository name"
               />
-              {formik.touched.password && formik.errors.password ? (
-                <Text style={styles.errorText}>{formik.errors.password}</Text>
+              {formik.touched.name && formik.errors.name ? (
+                <Text style={styles.errorText}>{formik.errors.name}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                onChangeText={formik.handleChange("owner")}
+                onBlur={formik.handleBlur("owner")}
+                value={formik.values.owner}
+                placeholder="owner"
+              />
+              {formik.touched.owner && formik.errors.owner ? (
+                <Text style={styles.errorText}>{formik.errors.owner}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                onChangeText={formik.handleChange("name")}
+                onBlur={formik.handleBlur("name")}
+                value={formik.values.name}
+                placeholder="name"
+              />
+              {formik.touched.name && formik.errors.name ? (
+                <Text style={styles.errorText}>{formik.errors.name}</Text>
               ) : null}
               <Button title="Sign in" onPress={formik.handleSubmit} />
             </View>
@@ -154,4 +179,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default CreateReview;

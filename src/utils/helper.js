@@ -6,3 +6,7 @@ export const roundAfterThousand = (value) => {
   }
   return value;
 };
+
+export const getDateFormat = (value) => {
+  return value.substring(0, value.indexOf("T"));
+};

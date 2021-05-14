@@ -23,6 +23,11 @@ const AppBarTab = () => {
           </Link>
         </View>
         <View>
+          <Link to="/createreview">
+            <Text style={styles.text}>Create a review</Text>
+          </Link>
+        </View>
+        <View>
           <Link to="/">
             <Text style={styles.text}>
               {isLoggedIn ? "Sign out" : "Sign in"}
