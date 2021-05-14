@@ -10,7 +10,9 @@ import {
 } from "react-native";
 import { useParams } from "react-router-native";
 import * as Linking from "expo-linking";
+import format from "date-fns/format";
 import theme from "../theme";
+import { getDateFormat } from "../utils/helper";
 import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
 import Tag from "./Tag";
@@ -95,12 +97,54 @@ const RepositoryDetail = ({ repository }) => {
 
 const ReviewItem = ({ review }) => {
   return (
-    <View style={[styles.container, { marginBottom: 7 }]}>
-      <Text>{review.node.rating}</Text>
-      <Text>{review.node.user.username}</Text>
-      <Text>{review.node.createdAt}</Text>
-
-      <Text>{review.node.text}</Text>
+    <View
+      style={[
+        styles.container,
+        { marginBottom: 7, flex: 1, flexDirection: "row" },
+      ]}
+    >
+      <View
+        style={{
+          marginHorizontal: 25,
+          marginBottom: 25,
+          marginTop: 10,
+          width: 50,
+          height: 50,
+          borderRadius: 50,
+          borderColor: theme.colors.lightBlue,
+          borderWidth: 2,
+        }}
+      >
+        <Text
+          style={{
+            width: 30,
+            textAlign: "center",
+            margin: 9,
+            marginTop: 12,
+            color: theme.colors.lightBlue,
+            fontWeight: theme.fontWeights.bold,
+          }}
+        >
+          {review.node.rating}
+        </Text>
+      </View>
+      <View
+        style={{
+          marginVertical: 12,
+          marginRight: 20,
+          flex: 1,
+        }}
+      >
+        <Text style={{ fontWeight: theme.fontWeights.bold }}>
+          {review.node.user.username}
+        </Text>
+        <Text style={{ color: theme.colors.textSecondary }}>
+          {getDateFormat(review.node.createdAt)}
+        </Text>
+        <View style={{ flexDirection: "row", marginTop: 5 }}>
+          <Text style={{ flex: 1, flexWrap: "wrap" }}>{review.node.text}</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -114,6 +158,7 @@ const RepositoryDetails = () => {
   });
 
   const repository = !loading ? data.repository : [];
+
   useEffect(() => {
     if (!loading) {
       setReviews(repository.reviews.edges);
